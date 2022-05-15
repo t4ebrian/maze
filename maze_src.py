@@ -85,6 +85,9 @@ x,y = choice(empty_list)
 empty_list.remove((x, y))
 player = Player(x, y, box_size, (0, 0, 255), 10)
 
+
+v_enemy = list()
+
 h_enemy1 = Enemy(0, h - box_size, box_size, (255, 255, 255), 10)
 h_enemy2 = Enemy(0, 0, box_size, (255, 255, 255), 10)
 
@@ -94,8 +97,17 @@ v_enemy2 = Enemy(w - box_size, 0, box_size, (255, 255, 255), 10)
 cenr_v_enemy = Enemy(w // 2, 0, box_size, (255, 255, 255), 10)
 cenr_h_enemy = Enemy(0, h // 2, box_size, (255, 255, 255), 10)
 
+h_enemies = [h_enemy1, h_enemy2, cenr_h_enemy]
+v_enemies = [v_enemy1, v_enemy2, cenr_v_enemy]
+
 run = True
 while run:
+    for enemy in h_enemies:
+        if enemy.rect.colliderect(player.rect):
+            run = False
+    for enemy in v_enemies:
+        if enemy.rect.colliderect(player.rect):
+            run = False
     if score > 11:
         run = False
 
@@ -111,20 +123,14 @@ while run:
     for prize in prize_list:
         window.blit(prize.image, prize.rect)
 
-    h_enemy1.h_pat()
-    h_enemy2.h_pat()
-    v_enemy1.v_pat()
-    v_enemy2.v_pat()
-    cenr_v_enemy.v_pat()
-    cenr_h_enemy.h_pat()
     player.control()
     score_text = font.render('Счёт: ' + str(score), False, (0, 255, 0))
-    window.blit(h_enemy1.image, h_enemy1.rect)
-    window.blit(h_enemy2.image, h_enemy2.rect)
-    window.blit(v_enemy1.image, v_enemy1.rect)
-    window.blit(v_enemy2.image, v_enemy2.rect)
-    window.blit(cenr_v_enemy.image, cenr_v_enemy.rect)
-    window.blit(cenr_h_enemy.image, cenr_h_enemy.rect)
+    for enemy in h_enemies:
+        window.blit(enemy.image, enemy.rect)
+        enemy.h_pat()
+    for enemy in v_enemies:
+        window.blit(enemy.image, enemy.rect)
+        enemy.v_pat()
     window.blit(player.image, player.rect)
     window.blit(score_text, (20, 15))
  
